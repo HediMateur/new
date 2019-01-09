@@ -1,0 +1,145 @@
+
+entity Artist {
+	biography String,
+	firstName String required,
+	lastName String required,
+	birthDate LocalDate,
+	deathDate LocalDate,
+	gender String,
+	nationality String, 
+	stageName String,
+}
+
+entity Comment {
+	text String required
+}
+
+// an ignored comment
+/** not an ignored comment */
+entity Creation {
+	title String required,
+	description String,
+	categorie Categorie required,
+	dateProduction LocalDate,
+}
+
+entity Department {
+	eventName String required,
+	description String,
+	startDate LocalDate required,
+	endDate LocalDate required,
+
+}
+
+/**
+ * Task entity.
+ * @author The JHipster team.
+ */
+entity Follow {
+
+}
+
+/**
+ * The Employee entity.
+ */
+entity Interaction {
+}
+
+entity Message {
+	content String,
+	header String,
+	sentOn LocalDate,
+	read Boolean
+
+}
+entity Notification {
+	viewed Boolean,
+	notificationText String
+	
+}
+entity Photo {
+	pic ImageBlob
+
+}
+entity Post {
+	String text
+}
+entity User {
+	firstName String required,
+	lastName String required,
+	emailAddress String required,
+	about String,
+	password String required,
+	
+}
+entity Location {
+	description String,
+	name String required,
+	longitude Double required,
+	latitude Double required
+}
+
+enum Categorie {
+    FILM, CONCERT, GASTRONOMIE, COURS, ARTS, FETES, SPORTS, RENCONTRES, AUTRES
+}
+
+relationship OneToOne {
+	Photo{artistPicture} to Artist,
+    Photo{creationPicture} to Creation,
+    Photo{commentPicture} to Comment,
+    Photo{eventPicture} to Event,
+    Photo{postPic} to Post,
+    Photo{userPic} to User,
+    User{user} to Follow
+}
+
+relationship ManyToMany {
+	Follow{artists} to Artist{followers},
+    Follow{creations} to Creation{followers},
+    Creation{creations} to Artist{artists},
+    Follow{followers} to Event{events}
+    Follow{following} to User{followers},
+    Follow{events} to Event(followers),
+    Follow{locations} to Location{followrs}
+}
+
+relationship OneToMany {
+	Artist{interactionsArtist} to Interaction,
+    Creation{interactionsCreation} to Interaction,
+    Event{interactionsEvent} to Interaction,
+    User{owner} to Interaction,
+    User{artists} to Artist,
+    User{creations} to Creation,
+    Event{events} to Creation,
+    Location{location} to Event,
+}
+
+relationship ManyToOne {
+	Comment{eventsComment} to Event,
+    Comment{creationsComment} to Creation,
+    Comment{artistsComment} to Artist,
+    Comment{comments} to User,
+    Comment{postsComment} to Post,
+    Event{events} to Creation,
+    Event{events} to User,
+    Location{locations} to User,
+    Message{sender} to User,
+    Message{receiver} to User,
+    Notification{notifee} to User,
+    Notification{eventNotif} to Event,
+    Notification{creationNotif} to Creation,
+    Notification{postNotif} to Post,
+    Post{posts} to User,
+}
+
+
+
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl 
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
